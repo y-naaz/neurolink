@@ -179,6 +179,14 @@ export type StreamOptions = {
     includeHeaders?: boolean;
   };
 
+  // Video processing options
+  videoOptions?: {
+    frames?: number; // Number of frames to extract (default: 8)
+    quality?: number; // Frame quality 0-100 (default: 85)
+    format?: "jpeg" | "png"; // Frame format (default: jpeg)
+    transcribeAudio?: boolean; // Extract and transcribe audio (default: false)
+  };
+
   // Core streaming options
   provider?: AIProviderName | string;
   model?: string;
