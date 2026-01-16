@@ -431,7 +431,9 @@ export async function buildMessagesArray(
           logger.info(`[CSV] ✅ Processed: ${filename}`, result.metadata);
         } catch (error) {
           logger.error(`[CSV] ❌ Failed to process ${filename}:`, error);
-          csvContent += `\n\n## CSV Data Error: Failed to process "${filename}"\nReason: ${error instanceof Error ? error.message : "Unknown error"}`;
+          throw new Error(
+            `CSV processing failed for "${filename}": ${error instanceof Error ? error.message : "Unknown error"}`,
+          );
         }
       }
     }
@@ -591,10 +593,11 @@ export async function buildMultimodalMessagesArray(
         options.input.text += csvSection;
         logger.info(`[CSV] ✅ Processed: ${filename}`);
       } catch (error) {
-        logger.error(`[CSV] ❌ Failed:`, error);
         const filename = extractFilename(csvFile, i);
-        options.input.text += `\n\n## CSV Data Error: Failed to process "${filename}"`;
-        options.input.text += `\nReason: ${error instanceof Error ? error.message : "Unknown error"}`;
+        logger.error(`[CSV] ❌ Failed to process ${filename}:`, error);
+        throw new Error(
+          `CSV processing failed for "${filename}": ${error instanceof Error ? error.message : "Unknown error"}`,
+        );
       }
     }
   }
